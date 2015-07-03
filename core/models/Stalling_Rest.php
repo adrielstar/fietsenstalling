@@ -10,43 +10,55 @@ use Guzzle\Http\Client;
 class Stalling_Rest {
 
     const VEILIGSTALLEN_URL = 'http://www.veiligstallen.nl/veiligstallen.kml';
+    const COORDINATE_LAT = 'lat';
+    const COORDINATE_LNG = 'lng';
 
     private $_guzzleClient;
-    public $stallingen;
+
     public $aantalStallingen;
+    private $_stallingen = array();
 
-    /**
-     * @return bool
-     */
-    private function _callApi()
+    public function __construct()
     {
-        $request = $this->getGuzzleClient()->createRequest('GET', self::VEILIGSTALLEN_URL);
-        $response = $request->send()->getBody();
-
-        return simplexml_load_string($response) or die("Error: Cannot create object");
+        $this->setStallingen();
     }
 
     /**
      * @return bool
      */
-    public function getFietsenStallingen()
+    private function getFietsenStallingen()
     {
-        if (is_null($this->stallingen)) {
-            $this->aantalStallingen = count($this->_callApi()->Document->Placemark);
+        $request = $this->getGuzzleClient()->createRequest('GET', self::VEILIGSTALLEN_URL);
+        $response = $request->send()->getBody();
 
-            foreach ($this->_callApi()->Document->Placemark as $placemark) {
-                echo "name: $placemark->name <br>";
+        $xml = simplexml_load_string($response) or die("Error: Cannot create object");
+        return $xml;
+    }
+
+    /**
+     * Create stalling objects and place them into the stallingen array
+     */
+    public function setStallingen()
+    {
+        if (empty($this->_stallingen)) {
+            $this->aantalStallingen = count($this->getFietsenStallingen()->Document->Placemark);
+
+            foreach ($this->getFietsenStallingen()->Document->Placemark as $placemark) {
+                $stalling = new stdClass();
+                $stalling->name = (String) $placemark->name;
 
                 foreach($placemark->ExtendedData->Data as $a) {
-                    echo $a["name"] . ": " . $a->value;
-                    echo "<br>";
+                    $key = (String) $a["name"];
+                    $stalling->$key = (String) $a->value;
                 }
 
-                echo "<hr>";
+                $coordinates = (String) $placemark->Point->coordinates;
+                $stalling->lat = floatval($this->getCoordinate($coordinates, 'lat'));
+                $stalling->lng = floatval($this->getCoordinate($coordinates, 'lng'));
+
+                array_push($this->_stallingen, $stalling);
             }
-            return $this->stallingen = $this->_callApi();
         }
-        return $this->stallingen;
     }
 
     /**
@@ -58,6 +70,35 @@ class Stalling_Rest {
             return $this->_guzzleClient = new Client();
         }
         return $this->_guzzleClient;
+    }
+
+    /**
+     * @return stdClass array
+     */
+    public function getStallingen()
+    {
+        if (is_null($this->_stallingen)) {
+            $this->setStallingen();
+        }
+        return $this->_stallingen;
+    }
+
+    /**
+     * @param string $coordinates
+     * @param $type
+     * @return bool | string
+     */
+    private function getCoordinate($coordinates, $type)
+    {
+        if ($type == self::COORDINATE_LAT && is_string($coordinates)) {
+            $string = explode(",", $coordinates);
+            return $string[1];
+        } elseif ($type == self::COORDINATE_LNG && is_string($coordinates)) {
+            $string = explode(",", $coordinates);
+            return $string[0];
+        } else {
+            return false;
+        }
     }
 
 }

@@ -1,5 +1,19 @@
-<?php include 'includes/overall/header.php' ?>
-<?php include 'core/function.php' ?>
+<?php include 'includes/overall/header.php'; ?>
+<?php include 'core/models/Stalling_Rest.php'; ?>
+<?php include 'vendor/autoload.php'; ?>
+<?php
+
+$call = new Stalling_Rest();
+?>
+<script>
+
+    var stallingen = <?php echo json_encode($call->getStallingen()); ?>
+
+    for (i = 0; i < stallingen.length; i++) {
+        console.log(stallingen[i]["name"]);
+    }
+
+</script>
 <br>
     <br>
     <br><br>
@@ -7,27 +21,9 @@
 
     <div class="row ">
         <div class="col-md-2 col-sm-12 ">
-            <p>
-                <?php
-                echo get_omschrijving();
-                ?>
-            </p>
         </div>
         <div class="col-md-10 col-sm-12">
             <?php include 'includes/map.php' ?>
         </div>
     </div>
-
-
-
-    <!--    <div class="container">-->
-    <!--        <div class="row">-->
-    <!--            <div class="col-md-2 col-sm-12">-->
-    <!--                Sidebar content-->
-    <!--            </div>-->
-    <!--            <div class="col-md-10 col-sm-12">-->
-    <!--                <div id="map-canvas"/>-->
-    <!--            </div>-->
-    <!--        </div>-->
-    <!--    </div>-->
 <?php include 'includes/overall/footer.php' ?>
