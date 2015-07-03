@@ -10,7 +10,7 @@ function initialise() {
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
      
     xmlUrl = "veiligstallen.xml";
-     
+     request
     loadMarkers();
      
 }
