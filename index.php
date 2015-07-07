@@ -4,6 +4,12 @@
 <?php
 
 $call = new Stalling_Rest();
+$stallingen = $restCall->getStallingen();
+
+foreach($stallingen as $stalling){
+    $stalling->lat;
+    $stalling->lng;
+}
 
 ?>
     <script>
