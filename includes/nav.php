@@ -15,11 +15,16 @@
             <div class="form-group" style="display:inline;">
                 <div class="input-group">
                     <div class="input-group-btn">
+                    <!--                    <input type="text" id="search-input" class="form-control" placeholder="What are searching for?">-->
+                    <!--                    <span class="input-group-addon"><button type="button" class="glyphicon glyphicon-search"></button> </span>-->
+                            <input type="text" id="postcode-field" class="form-control" placeholder="Postcode">
+                        <button type="button" id="postcode-post" class="btn btn-default">Search</button>
                     </div>
-                    <input type="text" id="search-input" class="form-control" placeholder="What are searching for?">
-<!--                    <span class="input-group-addon"><button type="button" class="glyphicon glyphicon-search"></button> </span>-->
                 </div>
             </div>
         </form>
     </div>
+</div>
+</form>
+</div>
 </div>
