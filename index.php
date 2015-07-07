@@ -4,20 +4,15 @@
 <?php
 
 $call = new Stalling_Rest();
+$stallingen = $call->getStallingen();
 ?>
-<script>
-
-    var stallingen = <?php echo json_encode($call->getStallingen()); ?>
-
-    for (i = 0; i < stallingen.length; i++) {
-        console.log(stallingen[i]["name"]);
-    }
-
-</script>
-<br>
+    <script>
+        var stallingen = <?php echo json_encode($call->getStallingen()); ?>
+    </script>
     <br>
-    <br><br>
-
+    <br>
+    <br>
+    <br>
 
     <div class="row ">
         <div class="col-md-2 col-sm-12 ">
