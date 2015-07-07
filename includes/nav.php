@@ -17,7 +17,7 @@
                     <div class="input-group-btn">
                     </div>
                     <input type="text" id="search-input" class="form-control" placeholder="What are searching for?">
-                    <span class="input-group-addon"><button type="button" class="glyphicon glyphicon-search"></button> </span>
+<!--                    <span class="input-group-addon"><button type="button" class="glyphicon glyphicon-search"></button> </span>-->
                 </div>
             </div>
         </form>

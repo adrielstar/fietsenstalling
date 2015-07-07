@@ -1,27 +1,50 @@
 var map;
 
 function initialize() {
-
-    var markers = [];
     myLatlng = new google.maps.LatLng(52, 4);
     mapOptions = {
-        zoom: 8,
+        zoom: 15,
         center: myLatlng,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
     };
     map = new google.maps.Map(document.getElementById('map-canvas'),
         mapOptions);
 
+    // Create the search box and link it to the UI element.
+    input = /** @type {HTMLInputElement} */(
+        document.getElementById('search-input'));
+
+    searchBox = new google.maps.places.SearchBox(
+        /** @type {HTMLInputElement} */(input));
+    // Listen for the event fired when the user selects an item from the
+    // pick list. Retrieve the matching places for that item.
+    google.maps.event.addListener(searchBox, 'places_changed', function () {
+         places = searchBox.getPlaces();
+        var bounds = new google.maps.LatLngBounds();
+        for (var i = 0, place; place = places[i]; i++) {
+            bounds.extend(place.geometry.location);
+        }
+        map.fitBounds(bounds);
+    });
+
+    // Bias the SearchBox results towards places that are within the bounds of the
+    // current map's viewport.
+    google.maps.event.addListener(map, 'bounds_changed', function () {
+        var bounds = map.getBounds();
+        searchBox.setBounds(bounds);
+    });
+
+    bike_location = 'img/Bike_location_1.png';
     // Try HTML5 geolocation
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
             pos = new google.maps.LatLng(position.coords.latitude,
                 position.coords.longitude);
 
-            infowindow = new google.maps.InfoWindow({
-                map: map,
+            marker = new google.maps.Marker({
                 position: pos,
-                content: 'Location found.'
+                map: map,
+                icon: bike_location
             });
 
             map.setCenter(pos);
@@ -33,62 +56,8 @@ function initialize() {
         handleNoGeolocation(false);
     }
 
-    // Create the search box and link it to the UI element.
-    input = /** @type {HTMLInputElement} */(
-        document.getElementById('search-input'));
-
-
-    searchBox = new google.maps.places.SearchBox(
-        /** @type {HTMLInputElement} */(input));
-    // Listen for the event fired when the user selects an item from the
-    // pick list. Retrieve the matching places for that item.
-    google.maps.event.addListener(searchBox, 'places_changed', function () {
-        var places = searchBox.getPlaces();
-
-        if (places.length == 0) {
-            return;
-        }
-        for (var i = 0, marker; marker = markers[i]; i++) {
-            marker.setMap(null);
-        }
-
-        // For each place, get the icon, place name, and location.
-        markers = [];
-        var bounds = new google.maps.LatLngBounds();
-        for (var i = 0, place; place = places[i]; i++) {
-            var image = {
-                url: place.icon,
-                size: new google.maps.Size(71, 71),
-                origin: new google.maps.Point(0, 0),
-                anchor: new google.maps.Point(17, 34),
-                scaledSize: new google.maps.Size(25, 25)
-            };
-
-            // Create a marker for each place.
-            var marker = new google.maps.Marker({
-                map: map,
-                icon: image,
-                title: place.name,
-                zoom: 2,
-                position: place.geometry.location
-            });
-
-            markers.push(marker);
-
-            bounds.extend(place.geometry.location);
-        }
-
-        map.fitBounds(bounds);
-    });
-
-    // Bias the SearchBox results towards places that are within the bounds of the
-    // current map's viewport.
-    google.maps.event.addListener(map, 'bounds_changed', function () {
-        var bounds = map.getBounds();
-        searchBox.setBounds(bounds);
-    });
-
 }
+
 
 function handleNoGeolocation(errorFlag) {
     if (errorFlag) {
