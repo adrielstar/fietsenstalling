@@ -11,7 +11,7 @@
             <li class="active"><a href="">Home</a></li>
             <li>&nbsp;</li>
         </ul>
-        <form class="navbar-form">
+        <form id="postcode-form" class="navbar-form">
             <div class="form-group" style="display:inline;">
                 <div class="input-group">
                     <div class="input-group-btn">
@@ -23,6 +23,23 @@
                 </div>
             </div>
         </form>
+        <script>
+            var form = document.getElementById("postcode-form");
+
+            document.getElementById("postcode-post").addEventListener("click", function () {
+//                form.submit();
+
+                // check if is postcode regexp
+                // if is result
+                //button click or enter (submit)
+                postcode = document.getElementById("postcode-field").value;
+                $.post("http://maps.googleapis.com/maps/api/geocode/json?address="+postcode+", Netherlands",
+                    function (data, status) {
+                        console.log("lat: " + data.results[0]["geometry"]["location"]["lat"]);
+                        console.log("lng: " + data.results[0]["geometry"]["location"]["lng"]);
+                    });
+            });
+        </script>
     </div>
 </div>
 </form>

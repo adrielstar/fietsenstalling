@@ -31,20 +31,19 @@
             sleep(500);
         }
     </script>
-<script>
-    $(document).ready(function(){
-        $("#postcode-post").click(function(){
-            if ("#postcode-field") {
-                $.post("http://maps.googleapis.com/maps/api/geocode/json?",
-                    {
-                        address: "3031PD, Netherlands"
-                    },
-                    function (data, status) {
-                        alert("Data: " + data + "\nStatus: " + status);
-                    });
-            }});
-    });
-</script>
+<!--<script>-->
+<!--    $(document).ready(function(){-->
+<!--        $("#postcode-post").click(function(){-->
+<!--                $.post("http://maps.googleapis.com/maps/api/geocode/json?",-->
+<!--                    {-->
+<!--                        address: "3031PD, Netherlands"-->
+<!--                    },-->
+<!--                    function (data, status) {-->
+<!--                        alert("Data: " + data + "\nStatus: " + status);-->
+<!--                    });-->
+<!--            }});-->
+<!--    });-->
+<!--</script>-->
 <?php include 'core/models/Stalling_Rest.php'; ?>
 <?php include 'vendor/autoload.php'; ?>
 <?php
@@ -75,12 +74,6 @@ $stallingen = $call->getStallingen();
                 for (i = 0; i < stallingen.length; i++) {
 //        console.log(stallingen[i]["name"]);
                 }
-
-                $("button").click(function () {
-                    $.get("demo_test.asp", function (data, status) {
-                        alert("Data: " + data + "\nStatus: " + status);
-                    });
-                });
 
             </script>
 

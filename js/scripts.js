@@ -14,25 +14,25 @@ function initialize() {
     input = /** @type {HTMLInputElement} */(
         document.getElementById('search-input'));
 
-    searchBox = new google.maps.places.SearchBox(
-        /** @type {HTMLInputElement} */(input));
-    // Listen for the event fired when the user selects an item from the
-    // pick list. Retrieve the matching places for that item.
-    google.maps.event.addListener(searchBox, 'places_changed', function () {
-        places = searchBox.getPlaces();
-        bounds = new google.maps.LatLngBounds();
-        for (i = 0, place; place = places[i]; i++) {
-            bounds.extend(place.geometry.location);
-        }
-        map.fitBounds(bounds);
-    });
-
-    // Bias the SearchBox results towards places that are within the bounds of the
-    // current map's viewport.
-    google.maps.event.addListener(map, 'bounds_changed', function () {
-        var bounds = map.getBounds();
-        searchBox.setBounds(bounds);
-    });
+    //searchBox = new google.maps.places.SearchBox(
+    //    /** @type {HTMLInputElement} */(input));
+    //// Listen for the event fired when the user selects an item from the
+    //// pick list. Retrieve the matching places for that item.
+    //google.maps.event.addListener(searchBox, 'places_changed', function () {
+    //    places = searchBox.getPlaces();
+    //    bounds = new google.maps.LatLngBounds();
+    //    for (i = 0, place; place = places[i]; i++) {
+    //        bounds.extend(place.geometry.location);
+    //    }
+    //    map.fitBounds(bounds);
+    //});
+    //
+    //// Bias the SearchBox results towards places that are within the bounds of the
+    //// current map's viewport.
+    //google.maps.event.addListener(map, 'bounds_changed', function () {
+    //    var bounds = map.getBounds();
+    //    searchBox.setBounds(bounds);
+    //});
 
     // Markers icon
     bike_location = 'img/BikeLocationIcon.png';
