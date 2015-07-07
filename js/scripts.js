@@ -72,11 +72,46 @@ function initialize() {
         });
     }
 
+    // request to google api to get all bicycle_store
     request = {
-        location: pyrmont,
-        radius: 500,
+        location: myLatlng,
+        radius: 6500,
         types: ['bicycle_store']
     };
+    infowindow = new google.maps.InfoWindow();
+    service = new google.maps.places.PlacesService(map);
+    service.nearbySearch(request, callback);
+}
+
+/**
+ *
+ * @param results
+ * @param status
+ */
+function callback(results, status) {
+    if (status == google.maps.places.PlacesServiceStatus.OK) {
+        for (var i = 0; i < results.length; i++) {
+            createMarker(results[i]);
+        }
+    }
+}
+/**
+ *
+ * @param place
+ */
+function createMarker(place) {
+     placeLoc = place.geometry.location;
+    storeIcon = 'img/BikeStoreIcon.png';
+     StoreBikeMarker = new google.maps.Marker({
+        map: map,
+        icon: storeIcon,
+        position: place.geometry.location
+    });
+
+    google.maps.event.addListener(StoreBikeMarker, 'click', function() {
+        infowindow.setContent(place.name);
+        infowindow.open(map, this);
+    });
 }
 
 /**
