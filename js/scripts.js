@@ -1,9 +1,9 @@
 var map;
 
 function initialize() {
-    myLatlng = new google.maps.LatLng(52, 4);
+    myLatlng = new google.maps.LatLng(51.924215999999990000, 4.481775999999968000);
     mapOptions = {
-        zoom: 15,
+        zoom: 13,
         center: myLatlng,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
     };
@@ -19,9 +19,9 @@ function initialize() {
     // Listen for the event fired when the user selects an item from the
     // pick list. Retrieve the matching places for that item.
     google.maps.event.addListener(searchBox, 'places_changed', function () {
-         places = searchBox.getPlaces();
-        var bounds = new google.maps.LatLngBounds();
-        for (var i = 0, place; place = places[i]; i++) {
+        places = searchBox.getPlaces();
+        bounds = new google.maps.LatLngBounds();
+        for (i = 0, place; place = places[i]; i++) {
             bounds.extend(place.geometry.location);
         }
         map.fitBounds(bounds);
@@ -34,7 +34,10 @@ function initialize() {
         searchBox.setBounds(bounds);
     });
 
-    bike_location = 'img/Bike_location_1.png';
+    // Markers icon
+    bike_location = 'img/BikeLocationIcon.png';
+    stallingen_ImageIcon = 'img/bike.png';
+
     // Try HTML5 geolocation
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
@@ -56,9 +59,30 @@ function initialize() {
         handleNoGeolocation(false);
     }
 
+    // create Stallingen Markers
+    for (k = 0; k < stallingen.length; k++) {
+
+        stallingenLatCoordinat = parseFloat(stallingen[k]["lat"]);
+        stallingenLngCoordinat = parseFloat(stallingen[k]["lng"]);
+
+        stallingMarker = new google.maps.Marker({
+            position: new google.maps.LatLng(parseFloat(stallingenLatCoordinat), parseFloat(stallingenLngCoordinat)),
+            map: map,
+            icon: stallingen_ImageIcon
+        });
+    }
+
+    request = {
+        location: pyrmont,
+        radius: 500,
+        types: ['bicycle_store']
+    };
 }
 
-
+/**
+ *
+ * @param errorFlag
+ */
 function handleNoGeolocation(errorFlag) {
     if (errorFlag) {
         var content = 'Error: The Geolocation service failed.';
@@ -68,7 +92,7 @@ function handleNoGeolocation(errorFlag) {
 
     options = {
         map: map,
-        position: new google.maps.LatLng(60, 105),
+        position: new google.maps.LatLng(51.924215999999990000, 4.481775999999968000),
         content: content
     };
 
