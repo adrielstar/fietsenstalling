@@ -2,6 +2,7 @@ var map;
 var infoWindow = new google.maps.InfoWindow();
 var storeInfowindow = new google.maps.InfoWindow();
 var stallingeninfowindow = new google.maps.InfoWindow();
+var arrayStoreMarkers = [];
 
 function initialize() {
     myLatlng = new google.maps.LatLng(51.924215999999990000, 4.481775999999968000);
@@ -113,6 +114,8 @@ function callback(results, status) {
         }
     }
 }
+
+
 /**
  *
  * @param place
@@ -126,6 +129,8 @@ function createMarker(place) {
         position: place.geometry.location
     });
 
+    arrayStoreMarkers.push(storeBikeMarker);
+
     var request = {reference: place.reference};
     service.getDetails(request, function (details, status) {
         google.maps.event.addListener(storeBikeMarker, 'click', function () {
@@ -137,6 +142,36 @@ function createMarker(place) {
         });
     });
 }
+
+/**
+ * Hide bike Store
+ */
+function hideBikestore() {
+    if (arrayStoreMarkers) {
+        for (var i = 0; i < arrayStoreMarkers.length; i++) {
+            arrayStoreMarkers[i].setMap(null);
+        }
+    }
+}
+/**
+ *  show bike store
+ */
+function showBikeStore() {
+    if (arrayStoreMarkers) {
+        for (var i = 0; i < arrayStoreMarkers.length; i++) {
+            arrayStoreMarkers[i].setMap(map);
+        }
+    }
+}
+
+$('#hideBikeStore').change(function() {
+    if( $('#hideBikeStore').prop("checked")) {
+        showBikeStore();
+    }
+    else  {
+        hideBikestore();
+    }
+});
 
 /**
  *
