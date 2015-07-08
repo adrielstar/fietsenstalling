@@ -62,23 +62,6 @@ $stallingen = $call->getStallingen();
 
     <div class="row ">
         <div class="col-md-2 col-sm-12 ">
-<!--            check with regexp if postcode-->
-<!--            http://maps.googleapis.com/maps/api/geocode/json?address=3031PD, Netherlands-->
-
-
-            <script>
-
-                var stallingen =
-                <?php echo json_encode($call->getStallingen()); ?>
-
-                for (i = 0; i < stallingen.length; i++) {
-//        console.log(stallingen[i]["name"]);
-                }
-
-            </script>
-
-
-            <br>
         </div>
         <div class="col-md-10 col-xs-12">
             <?php include 'includes/map.php' ?>
