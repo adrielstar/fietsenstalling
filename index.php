@@ -62,6 +62,7 @@ $stallingen = $call->getStallingen();
 
     <div class="row ">
         <div class="col-md-2 col-sm-12 ">
+            <input id="hideBikeStore" type="checkbox" value="" checked> Show Bike Store<br>
         </div>
         <div class="col-md-10 col-xs-12">
             <?php include 'includes/map.php' ?>
