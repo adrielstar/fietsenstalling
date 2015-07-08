@@ -3,6 +3,8 @@ var infoWindow = new google.maps.InfoWindow();
 var storeInfowindow = new google.maps.InfoWindow();
 var stallingeninfowindow = new google.maps.InfoWindow();
 
+var directionsService = new google.maps.DirectionsService();
+
 function initialize() {
     myLatlng = new google.maps.LatLng(51.924215999999990000, 4.481775999999968000);
     mapOptions = {
@@ -12,7 +14,7 @@ function initialize() {
     };
     map = new google.maps.Map(document.getElementById('map-canvas'),
         mapOptions);
-
+    
     // Markers icon
     bike_location = 'img/BikeLocationIcon.png';
     stallingen_ImageIcon = 'img/bike.png';
@@ -175,3 +177,9 @@ function stallingenInfoWindow(stallingMarker, stallingenDetails) {
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
+
+
+var gamePath = "comgooglemaps://?saddr=" + start + "&daddr=" + end + "&directionsmode=bicycling";
+
+
+
