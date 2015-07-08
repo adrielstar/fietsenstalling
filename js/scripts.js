@@ -4,10 +4,16 @@ var storeInfowindow = new google.maps.InfoWindow();
 var stallingeninfowindow = new google.maps.InfoWindow();
 var arrayStoreMarkers = [];
 
+var directionDisplay;
 var directionsService = new google.maps.DirectionsService();
 
 function initialize() {
     myLatlng = new google.maps.LatLng(51.924215999999990000, 4.481775999999968000);
+
+    // set direction render options
+    var rendererOptions = { draggable: true };
+    directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
+
     mapOptions = {
         zoom: 13,
         center: myLatlng,
@@ -15,6 +21,9 @@ function initialize() {
     };
     map = new google.maps.Map(document.getElementById('map-canvas'),
         mapOptions);
+
+    directionsDisplay.setMap(map);
+    directionsDisplay.setPanel(document.getElementById("directionsPanel"));
 
     // Markers icon
     bike_location = 'img/BikeLocationIcon.png';
