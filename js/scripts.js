@@ -10,30 +10,6 @@ function initialize() {
     map = new google.maps.Map(document.getElementById('map-canvas'),
         mapOptions);
 
-    // Create the search box and link it to the UI element.
-    input = /** @type {HTMLInputElement} */(
-        document.getElementById('search-input'));
-
-    searchBox = new google.maps.places.SearchBox(
-        /** @type {HTMLInputElement} */(input));
-    // Listen for the event fired when the user selects an item from the
-    // pick list. Retrieve the matching places for that item.
-    google.maps.event.addListener(searchBox, 'places_changed', function () {
-        places = searchBox.getPlaces();
-        bounds = new google.maps.LatLngBounds();
-        for (i = 0, place; place = places[i]; i++) {
-            bounds.extend(place.geometry.location);
-        }
-        map.fitBounds(bounds);
-    });
-
-    // Bias the SearchBox results towards places that are within the bounds of the
-    // current map's viewport.
-    google.maps.event.addListener(map, 'bounds_changed', function () {
-        var bounds = map.getBounds();
-        searchBox.setBounds(bounds);
-    });
-
     // Markers icon
     bike_location = 'img/BikeLocationIcon.png';
     stallingen_ImageIcon = 'img/bike.png';
@@ -41,13 +17,22 @@ function initialize() {
     // Try HTML5 geolocation
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
-            pos = new google.maps.LatLng(position.coords.latitude,
-                position.coords.longitude);
+            pos = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
 
-            marker = new google.maps.Marker({
+             contentString = 'current location';
+
+             infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+
+            currentLocationMarker = new google.maps.Marker({
                 position: pos,
                 map: map,
                 icon: bike_location
+            });
+
+            google.maps.event.addListener(currentLocationMarker, 'click', function() {
+                infowindow.open(map,currentLocationMarker);
             });
 
             map.setCenter(pos);
