@@ -4,6 +4,8 @@ var storeInfowindow = new google.maps.InfoWindow();
 var stallingeninfowindow = new google.maps.InfoWindow();
 var arrayStoreMarkers = [];
 
+var directionsService = new google.maps.DirectionsService();
+
 function initialize() {
     myLatlng = new google.maps.LatLng(51.924215999999990000, 4.481775999999968000);
     mapOptions = {
@@ -144,36 +146,6 @@ function createMarker(place) {
 }
 
 /**
- * Hide bike Store
- */
-function hideBikestore() {
-    if (arrayStoreMarkers) {
-        for (var i = 0; i < arrayStoreMarkers.length; i++) {
-            arrayStoreMarkers[i].setMap(null);
-        }
-    }
-}
-/**
- *  show bike store
- */
-function showBikeStore() {
-    if (arrayStoreMarkers) {
-        for (var i = 0; i < arrayStoreMarkers.length; i++) {
-            arrayStoreMarkers[i].setMap(map);
-        }
-    }
-}
-
-$('#hideBikeStore').change(function() {
-    if( $('#hideBikeStore').prop("checked")) {
-        showBikeStore();
-    }
-    else  {
-        hideBikestore();
-    }
-});
-
-/**
  *
  * @param errorFlag
  */
@@ -210,3 +182,9 @@ function stallingenInfoWindow(stallingMarker, stallingenDetails) {
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
+
+
+//var gamePath = "comgooglemaps://?saddr=" + start + "&daddr=" + end + "&directionsmode=bicycling";
+
+
+
