@@ -21,7 +21,18 @@ function initialize() {
 
              contentString = 'current location';
 
-             infowindow = new google.maps.InfoWindow({
+            // request to google api to get all bicycle_store
+            request = {
+                location: myLatlng,
+                radius: 1000,
+                types: ['bicycle_store']
+            };
+            storeInfowindow = new google.maps.InfoWindow();
+            service = new google.maps.places.PlacesService(map);
+            service.nearbySearch(request, callback);
+
+
+             locationInfowindow = new google.maps.InfoWindow({
                 content: contentString
             });
 
@@ -32,7 +43,7 @@ function initialize() {
             });
 
             google.maps.event.addListener(currentLocationMarker, 'click', function() {
-                infowindow.open(map,currentLocationMarker);
+                locationInfowindow.open(map,currentLocationMarker);
             });
 
             map.setCenter(pos);
@@ -56,16 +67,6 @@ function initialize() {
             icon: stallingen_ImageIcon
         });
     }
-
-    // request to google api to get all bicycle_store
-    request = {
-        location: myLatlng,
-        radius: 6500,
-        types: ['bicycle_store']
-    };
-    infowindow = new google.maps.InfoWindow();
-    service = new google.maps.places.PlacesService(map);
-    service.nearbySearch(request, callback);
 }
 
 /**
@@ -85,17 +86,23 @@ function callback(results, status) {
  * @param place
  */
 function createMarker(place) {
-     placeLoc = place.geometry.location;
+     var placeLoc = place.geometry.location;
     storeIcon = 'img/BikeStoreIcon.png';
-     StoreBikeMarker = new google.maps.Marker({
+     var StoreBikeMarker = new google.maps.Marker({
         map: map,
         icon: storeIcon,
         position: place.geometry.location
     });
 
-    google.maps.event.addListener(StoreBikeMarker, 'click', function() {
-        infowindow.setContent(place.name);
-        infowindow.open(map, this);
+    var request = { reference: place.reference };
+    service.getDetails(request, function(details, status) {
+        google.maps.event.addListener(StoreBikeMarker, 'click', function() {
+            storeInfowindow.setContent("<h5>" + details.name +"</h5>"
+                                        + details.formatted_address +"<br />"
+                                        + "<a href="+ details.website + '" target="_blank">'+ details.website + "</a>" +
+                                        "<br />" + details.formatted_phone_number);
+            storeInfowindow.open(map, this);
+        });
     });
 }
 
