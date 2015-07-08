@@ -146,36 +146,6 @@ function createMarker(place) {
 }
 
 /**
- * Hide bike Store
- */
-function hideBikestore() {
-    if (arrayStoreMarkers) {
-        for (var i = 0; i < arrayStoreMarkers.length; i++) {
-            arrayStoreMarkers[i].setMap(null);
-        }
-    }
-}
-/**
- *  show bike store
- */
-function showBikeStore() {
-    if (arrayStoreMarkers) {
-        for (var i = 0; i < arrayStoreMarkers.length; i++) {
-            arrayStoreMarkers[i].setMap(map);
-        }
-    }
-}
-
-$('#hideBikeStore').change(function() {
-    if( $('#hideBikeStore').prop("checked")) {
-        showBikeStore();
-    }
-    else  {
-        hideBikestore();
-    }
-});
-
-/**
  *
  * @param errorFlag
  */
