@@ -14,7 +14,7 @@ function initialize() {
     };
     map = new google.maps.Map(document.getElementById('map-canvas'),
         mapOptions);
-    
+
     // Markers icon
     bike_location = 'img/BikeLocationIcon.png';
     stallingen_ImageIcon = 'img/bike.png';
@@ -179,7 +179,7 @@ function stallingenInfoWindow(stallingMarker, stallingenDetails) {
 google.maps.event.addDomListener(window, 'load', initialize);
 
 
-var gamePath = "comgooglemaps://?saddr=" + start + "&daddr=" + end + "&directionsmode=bicycling";
+//var gamePath = "comgooglemaps://?saddr=" + start + "&daddr=" + end + "&directionsmode=bicycling";
 
 
 
