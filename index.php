@@ -64,7 +64,6 @@
                         directionsDisplay.setDirections(response);
                         console.log("RES: " + response);
                     } else {
-                        debugger;
                         // alert an error message when the route could nog be calculated.
                         if (status == 'ZERO_RESULTS') {
                             alert('No route could be found between the origin and destination.');
@@ -90,7 +89,7 @@
 
         </script>
 <!--        END LOGIC-->
-
+        <div id="directionsPanel"></div>
         <div class="col-md-10 col-xs-12">
             <?php include 'includes/map.php' ?>
             <a id="gameAnchor" href="comgooglemaps://">Go to the google maps app</a>

@@ -1,8 +1,13 @@
-var map;
+var map = null;
 var infoWindow = new google.maps.InfoWindow();
 var storeInfowindow = new google.maps.InfoWindow();
 var stallingeninfowindow = new google.maps.InfoWindow();
 var arrayStoreMarkers = [];
+var directionsDisplay = new google.maps.DirectionsRenderer();
+var directionsService = new google.maps.DirectionsService();
+var stalingmarkermarkers = [];
+var htmls = [];
+var to_htmls = [];
 
 var directionDisplay;
 var directionsService = new google.maps.DirectionsService();
@@ -42,7 +47,9 @@ function initialize() {
 
     directionsDisplay.setMap(map);
     directionsDisplay.setPanel(document.getElementById("directionsPanel"));
-
+    google.maps.event.addListener(map, 'click', function() {
+        infoWindow.close();
+    });
     // Markers icon
     bike_location = 'img/BikeLocationIcon.png';
     stallingen_ImageIcon = 'img/bike.png';
@@ -72,7 +79,7 @@ function initialize() {
                 content: contentString
             });
 
-            currentLocationMarker = new google.maps.Marker({
+            var currentLocationMarker = new google.maps.Marker({
                 position: pos,
                 map: map,
                 icon: bike_location
@@ -105,13 +112,26 @@ function initialize() {
         stallingOpeningstijden = stallingen[k]["Openingstijden"];
 
         stallingOpeningstijdenSplits = stallingOpeningstijden.match(/.{1,17}/g);
-
+        stallingenLatLng = new google.maps.LatLng(parseFloat(stallingenLatCoordinat), parseFloat(stallingenLngCoordinat));
         stallingMarker = new google.maps.Marker({
-            position: new google.maps.LatLng(parseFloat(stallingenLatCoordinat), parseFloat(stallingenLngCoordinat)),
+            position: stallingenLatLng ,
             map: map,
-            icon: stallingen_ImageIcon
+            icon: stallingen_ImageIcon,
+            title: stallingName
         });
+        var html = '<br>Directions: <a href="javascript:tohere(' + k + ')">To here<\/a> ';
 
+        var k = stalingmarkermarkers.length;
+        latlng = stallingenLatLng;
+
+        // The info window version with the "to here" form open
+        to_htmls[k] = html + '<br>Directions: <b>To here<\/b> '+
+        '<br>Address:<form action="javascript:getDirections()">' +
+        '<input type="text" SIZE=40 MAXLENGTH=40 name="saddr" id="saddr" value="" placeholder="Empty is current location!" /><br>' +
+        '<INPUT value="Get Directions" TYPE="button" onclick="getDirections()"><br>' +
+        'Walk <input type="checkbox" name="walk" id="walk" /> &nbsp; Bike <input type="checkbox" name="bike" id="bike" />' +
+        '<input type="hidden" id="daddr" value="' + latlng +
+        '"/>';
 
         stallingenDetails = '<h5>' + stallingName + '</h5>'
         + '<h6> Adres: ' + stallingAdres + '</h6>'
@@ -126,12 +146,56 @@ function initialize() {
         + '<h6>  ' + stallingOpeningstijdenSplits[1] + '</h6>'
         + '<h6>  ' + stallingOpeningstijdenSplits[2] + '</h6>'
         + '<h6> ' + stallingOpeningstijdenSplits[3] + '</h6>'
-        + '<h6> ' + stallingOpeningstijdenSplits[4] + '</h6>';
+        + '<h6> ' + stallingOpeningstijdenSplits[4] + '</h6>'
+        + html;
 
 
         stallingenInfoWindow(stallingMarker, stallingenDetails);
-
+        stalingmarkermarkers.push(stallingMarker);
+        htmls[k] = html;
     }
+}
+
+// ===== request the directions =====
+function getDirections() {
+
+    var request = {};
+    if (document.getElementById("walk").checked) {
+        request.travelMode = google.maps.DirectionsTravelMode.WALKING;
+    } else {
+        request.travelMode = google.maps.DirectionsTravelMode.DRIVING;
+    }
+
+    if (document.getElementById("bike").checked) {
+        request.travelMode = google.maps.DirectionsTravelMode.BICYCLING;
+    } else {
+        request.travelMode = google.maps.DirectionsTravelMode.DRIVING;
+    }
+    // ==== set the start and end locations ====
+    var saddr = document.getElementById("saddr").value;
+    var daddr = document.getElementById("daddr").value;
+
+    request.origin = start , saddr;
+    request.destination = daddr;
+    directionsService.route(request, function(response, status) {
+        if (status == google.maps.DirectionsStatus.OK) {
+            directionsDisplay.setDirections(response);
+        } else alert("Directions not found:" + status);
+    });
+}
+
+
+// This function picks up the click and opens the corresponding info window
+function myclick(i) {
+    google.maps.event.trigger(stalingmarkermarkers[i], "click");
+}
+
+
+// functions that open the directions forms
+function tohere(i) {
+
+    infoWindow.setContent(to_htmls[i]);
+    infoWindow.open(map, stalingmarkermarkers[i]);
 }
 
 /**
