@@ -34,54 +34,21 @@
 <!--        LOGIC-->
         <script type="application/javascript">
             var x = document.getElementById("demo");
-            var start;
+            var start = getCookie("latitude") + "," + getCookie("longitude");
             var gamePath;
 
-            function getLocation() {
-                if (navigator.geolocation) {
-                    return navigator.geolocation.getCurrentPosition(showPosition, showError);
-                } else {
-                    x.innerHTML = "Geolocation is not supported by this browser.";
-                }
-            }
-
-            function showPosition(position) {
-                x.innerHTML = start = position.coords.latitude + "," + position.coords.longitude;
-            }
-
-            function showError(error) {
-                switch(error.code) {
-                    case error.PERMISSION_DENIED:
-                        x.innerHTML = "User denied the request for Geolocation.";
-                        break;
-                    case error.POSITION_UNAVAILABLE:
-                        x.innerHTML = "Location information is unavailable.";
-                        break;
-                    case error.TIMEOUT:
-                        x.innerHTML = "The request to get user location timed out.";
-                        break;
-                    case error.UNKNOWN_ERROR:
-                        x.innerHTML = "An unknown error occurred.";
-                        break;
-                }
-            }
+            console.log("latitude: " + getCookie("latitude"));
+            console.log("longitude: " + getCookie("longitude"));
 
             function setEnd() {
                 postcode = document.getElementById("location-to").value;
-                $.post("http://maps.googleapis.com/maps/api/geocode/json?address=" + postcode + ", Netherlands",
+                $.post("http://maps.googleapis.com/maps/api/geocode/json?address=" + postcode + "+Netherlands",
                     function (data) {
                         calcRoute(data.results[0]["geometry"]["location"]["lat"] + "," + data.results[0]["geometry"]["location"]["lng"]);
                     });
             }
 
             function calcRoute(me) {
-                debugger;
-
-                if(typeof start === 'undefined'){
-                    getLocation();
-                    start = x.innerHTML;
-                };
-
                 console.log("caling route   " + me);
                 var request = {
                     origin: start,
@@ -92,10 +59,12 @@
 
                 directionsService.route(request, function(response, status) {
                     if (status == google.maps.DirectionsStatus.OK) {
-                        $('#directionsPanel').empty(); // clear the directions panel before adding new directions
+//                        debugger;
+//                        $('#directionsPanel').empty(); // clear the directions panel before adding new directions
                         directionsDisplay.setDirections(response);
-                        console.log(response);
+                        console.log("RES: " + response);
                     } else {
+                        debugger;
                         // alert an error message when the route could nog be calculated.
                         if (status == 'ZERO_RESULTS') {
                             alert('No route could be found between the origin and destination.');
